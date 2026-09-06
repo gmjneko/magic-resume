@@ -105,7 +105,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
 
         <div className="flex items-center gap-2 whitespace-nowrap">
           <Switch
-            checked={field.displayLabel ?? false}
+            checked={field.displayLabel === true}
             onCheckedChange={(checked) =>
               onUpdate({
                 ...field,
@@ -114,7 +114,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
             }
           />
           <span className="text-xs text-muted-foreground">
-            {t("customFields.displayLabel")}
+            {t("displayLabel")}
           </span>
         </div>
 
@@ -194,6 +194,17 @@ const BasicPanel: React.FC = () => {
       fieldOrder: basicFieldsRef.current,
     });
   }, [updateBasicInfo]);
+
+  const toggleFieldDisplayLabel = (fieldId: string, displayLabel: boolean) => {
+    const newFields = basicFields.map((field) =>
+      field.id === fieldId ? { ...field, displayLabel } : field
+    );
+    setBasicFields(newFields);
+    updateBasicInfo({
+      ...basic,
+      fieldOrder: newFields,
+    });
+  };
 
   const toggleFieldVisibility = (fieldId: string, isVisible: boolean) => {
     const newFields = basicFields.map((field) =>
@@ -341,6 +352,19 @@ const BasicPanel: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1">
+            {field.key !== "name" && field.key !== "title" && (
+              <div className="flex items-center gap-1.5 mr-1 whitespace-nowrap">
+                <Switch
+                  checked={field.displayLabel === true}
+                  onCheckedChange={(checked) =>
+                    toggleFieldDisplayLabel(field.id, checked)
+                  }
+                />
+                <span className="text-xs text-muted-foreground">
+                  {t("displayLabel")}
+                </span>
+              </div>
+            )}
             <Button
               variant="ghost"
               size="sm"

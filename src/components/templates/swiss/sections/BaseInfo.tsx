@@ -8,6 +8,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { useTranslations, useLocale } from "@/i18n/compat/client";
 import GithubContribution from "@/components/shared/GithubContribution";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
+import { shouldShowFieldLabel } from "@/lib/fieldDisplay";
 
 interface BaseInfoProps {
     basic: BasicInfo | undefined;
@@ -36,7 +37,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
             .filter((field) => field.visible !== false && field.key !== "name" && field.key !== "title")
             .map((field) => ({
                 key: field.key, value: field.key === "birthDate" && basic[field.key] ? formatDateString(basic[field.key] as string, locale) : (basic[field.key] as string),
-                icon: basic.icons?.[field.key] || "User", label: field.label, visible: field.visible, custom: field.custom,
+                icon: basic.icons?.[field.key] || "User", label: field.label, visible: field.visible, custom: field.custom, displayLabel: field.displayLabel,
             }))
             .filter((item) => Boolean(item.value));
     }, [basic]);
@@ -122,6 +123,10 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
         >
             {allFields.map((item) => {
                 const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;
+                const showLabel = item.custom
+                    ? shouldShowCustomFieldLabelPrefix(item, useIconMode)
+                    : shouldShowFieldLabel(item.displayLabel, useIconMode);
+                const labelText = item.custom ? item.label : t(`basicPanel.basicFields.${item.key}`);
 
                 return (
                     <motion.div
@@ -133,14 +138,9 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                             {getIcon(item.icon)}
                         </div>
                         <div className="flex items-center gap-1.5 min-w-0 leading-tight">
-                            {!useIconMode && !item.custom && (
+                            {showLabel && labelText && (
                                 <span className="shrink-0 font-extrabold text-[12px] text-slate-400 uppercase tracking-wider">
-                                    {t(`basicPanel.basicFields.${item.key}`)}
-                                </span>
-                            )}
-                            {!useIconMode && item.custom && shouldShowCustomFieldLabelPrefix(item) && (
-                                <span className="shrink-0 font-extrabold text-[12px] text-slate-400 uppercase tracking-wider">
-                                    {item.label}
+                                    {labelText}
                                 </span>
                             )}
                             {customFieldHref ? (

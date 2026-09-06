@@ -569,6 +569,7 @@
         "displayLabel": "Show label",
         "addButton": "Add Custom Field"
       },
+      "displayLabel": "Show label",
       "basicFields": {
         "name": "Name",
         "title": "Title",

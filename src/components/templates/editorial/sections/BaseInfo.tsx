@@ -6,6 +6,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { formatDateString } from "@/lib/utils";
 import { useLocale, useTranslations } from "@/i18n/compat/client";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
+import { shouldShowFieldLabel } from "@/lib/fieldDisplay";
 
 interface BaseInfoProps {
   basic: BasicInfo;
@@ -32,6 +33,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
         value: field.key === "birthDate" && basic[field.key] ? formatDateString(basic[field.key] as string, locale) : (basic[field.key] as string),
         label: field.label,
         custom: false,
+        displayLabel: field.displayLabel,
       }))
       .filter((item) => !!item.value);
   }, [basic, locale]);
@@ -104,10 +106,16 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
           item.custom && "href" in item && typeof item.href === "string"
             ? item.href
             : null;
+        const useIconMode = globalSettings?.useIconMode ?? false;
+        const showLabel = item.custom
+          ? shouldShowCustomFieldLabelPrefix(item, useIconMode)
+          : shouldShowFieldLabel(item.displayLabel, useIconMode);
+        const labelText = item.custom ? item.label : t(`basicPanel.basicFields.${item.key}`);
+        const labelPrefix = showLabel && labelText ? `${labelText}: ` : "";
 
         return (
           <div key={item.key} className="flex items-start gap-2">
-            {globalSettings?.useIconMode && (
+            {useIconMode && (
               <span className="inline-flex shrink-0 text-gray-400">
                 {getIcon(item.custom ? (item as any).icon : basic.icons?.[item.key as keyof typeof basic.icons])}
               </span>
@@ -115,27 +123,22 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
             <div className="min-w-0">
               {item.key === "email" ? (
                 <a href={`mailto:${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
-                  {globalSettings?.useIconMode ? "" : `${t(`basicPanel.basicFields.${item.key}`)}: `}
+                  {labelPrefix}
                   {item.value}
                 </a>
               ) : item.key === "website" || item.key === "github" ? (
                 <a href={item.value.startsWith("http") ? item.value : `https://${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
-                  {globalSettings?.useIconMode ? "" : `${item.label}: `}
+                  {labelPrefix}
                   {item.value.replace(/^https?:\/\//, "")}
                 </a>
               ) : customFieldHref ? (
                 <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="block min-w-0 underline transition-colors [overflow-wrap:anywhere] hover:text-black">
+                  {labelPrefix}
                   {item.value}
                 </a>
               ) : (
                 <span className="block min-w-0 [overflow-wrap:anywhere]">
-                  {globalSettings?.useIconMode
-                    ? ""
-                    : item.custom
-                      ? shouldShowCustomFieldLabelPrefix(item)
-                        ? `${item.label}: `
-                        : ""
-                      : `${t(`basicPanel.basicFields.${item.key}`)}: `}
+                  {labelPrefix}
                   {item.value}
                 </span>
               )}

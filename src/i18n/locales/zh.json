@@ -519,6 +519,7 @@
         "displayLabel": "显示标签",
         "addButton": "添加自定义字段"
       },
+      "displayLabel": "显示标签",
       "basicFields": {
         "name": "姓名",
         "title": "职位",

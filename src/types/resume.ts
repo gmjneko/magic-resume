@@ -51,6 +51,7 @@ export interface BasicFieldType {
   type?: "date" | "textarea" | "text" | "editor";
   visible: boolean;
   custom?: boolean;
+  displayLabel?: boolean;
 }
 
 export interface CustomFieldType {

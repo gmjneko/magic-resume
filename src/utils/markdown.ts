@@ -1,6 +1,7 @@
 import TurndownService from "turndown";
 import { DEFAULT_FIELD_ORDER } from "@/config";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
+import { shouldShowFieldLabel } from "@/lib/fieldDisplay";
 import { getProjectLinkMeta } from "@/lib/projectLink";
 import { BasicFieldType, BasicInfo, CustomItem, MenuSection, ResumeData } from "@/types/resume";
 
@@ -113,6 +114,7 @@ const renderBasicSection = (
   const fieldOrder = (resume.basic.fieldOrder?.length
     ? resume.basic.fieldOrder
     : DEFAULT_FIELD_ORDER) as BasicFieldType[];
+  const useIconMode = resume.globalSettings?.useIconMode ?? false;
 
   const lines: string[] = [];
   const name = pickBasicFieldValue(resume.basic, "name");
@@ -134,8 +136,9 @@ const renderBasicSection = (
       options?.basicFieldLabels?.[key] ||
       normalizeText(field.label) ||
       DEFAULT_BASIC_FIELD_LABELS[key];
+    const showLabel = shouldShowFieldLabel(field.displayLabel, useIconMode);
 
-    lines.push(`- ${label}: ${value}`);
+    lines.push(showLabel ? `- ${label}: ${value}` : `- ${value}`);
   }
 
   const customFieldLines = (resume.basic.customFields || [])
@@ -146,7 +149,7 @@ const renderBasicSection = (
 
       const href = getCustomFieldHref(field);
       const normalizedLabel = normalizeText(field.label);
-      const showPrefix = shouldShowCustomFieldLabelPrefix(field) && normalizedLabel;
+      const showPrefix = shouldShowCustomFieldLabelPrefix(field, useIconMode) && normalizedLabel;
       const markdownValue = href
         ? `[${displayText}](${href})`
         : displayText;
