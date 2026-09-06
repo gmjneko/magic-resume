@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+import { BasicLayout } from "@/types/resume";
 
 export interface ResumeTemplate {
   id: string;
@@ -18,7 +19,7 @@ export interface ResumeTemplate {
     contentPadding: number;
   };
   basic: {
-    layout?: "left" | "center" | "right";
+    layout?: BasicLayout;
   };
   availableSections?: string[];
 }

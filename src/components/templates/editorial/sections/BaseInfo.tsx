@@ -15,6 +15,7 @@ interface BaseInfoProps {
 const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
   const locale = useLocale();
   const t = useTranslations("workbench");
+  const isNameTop = basic.layout === "nameTop";
 
   const getOrderedFields = React.useMemo(() => {
     if (!basic.fieldOrder) {
@@ -63,35 +64,110 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
 
   const showPhoto = basic.photo && basic.photoConfig?.visible;
 
+  const photoNode = showPhoto && (
+    <motion.div layout="position" className="shrink-0">
+      <div
+        style={{
+          width: `${basic.photoConfig?.width || 100}px`,
+          height: `${basic.photoConfig?.height || 100}px`,
+          borderRadius: getBorderRadiusValue(basic.photoConfig || { borderRadius: "none", customBorderRadius: 0 }),
+          overflow: "hidden",
+        }}
+      >
+        <img src={basic.photo} alt={`${basic.name}'s photo`} className="w-full h-full object-cover" />
+      </div>
+    </motion.div>
+  );
+
+  const nameNode = basic.name && nameField.visible !== false && (
+    <motion.h1
+      layout="position"
+      className="font-bold tracking-widest whitespace-normal break-normal [overflow-wrap:normal] text-black"
+      style={{ fontSize: `${(globalSettings?.headerSize || 20) * (isNameTop ? 1.6 : 2)}px`, lineHeight: "1.1", marginBottom: "8px" }}
+    >
+      {basic.name}
+    </motion.h1>
+  );
+
+  const fieldsNode = (
+    <motion.div
+      layout="position"
+      className={
+        isNameTop
+          ? "flex flex-wrap items-center justify-start gap-x-6 gap-y-2 uppercase tracking-[0.05em] text-gray-500"
+          : "flex flex-wrap items-center justify-end gap-x-6 gap-y-2 uppercase tracking-[0.05em] text-gray-500 w-[80%] flex-shrink-0"
+      }
+      style={{ fontSize: `${globalSettings?.baseFontSize || 14}px` }}
+    >
+      {allFields.map((item) => {
+        const customFieldHref =
+          item.custom && "href" in item && typeof item.href === "string"
+            ? item.href
+            : null;
+
+        return (
+          <div key={item.key} className="flex items-start gap-2">
+            {globalSettings?.useIconMode && (
+              <span className="inline-flex shrink-0 text-gray-400">
+                {getIcon(item.custom ? (item as any).icon : basic.icons?.[item.key as keyof typeof basic.icons])}
+              </span>
+            )}
+            <div className="min-w-0">
+              {item.key === "email" ? (
+                <a href={`mailto:${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
+                  {globalSettings?.useIconMode ? "" : `${t(`basicPanel.basicFields.${item.key}`)}: `}
+                  {item.value}
+                </a>
+              ) : item.key === "website" || item.key === "github" ? (
+                <a href={item.value.startsWith("http") ? item.value : `https://${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
+                  {globalSettings?.useIconMode ? "" : `${item.label}: `}
+                  {item.value.replace(/^https?:\/\//, "")}
+                </a>
+              ) : customFieldHref ? (
+                <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="block min-w-0 underline transition-colors [overflow-wrap:anywhere] hover:text-black">
+                  {item.value}
+                </a>
+              ) : (
+                <span className="block min-w-0 [overflow-wrap:anywhere]">
+                  {globalSettings?.useIconMode
+                    ? ""
+                    : item.custom
+                      ? shouldShowCustomFieldLabelPrefix(item)
+                        ? `${item.label}: `
+                        : ""
+                      : `${t(`basicPanel.basicFields.${item.key}`)}: `}
+                  {item.value}
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </motion.div>
+  );
+
+  if (isNameTop) {
+    return (
+      <SectionWrapper sectionId="basic" className=" w-full">
+        <div className="flex items-start justify-between gap-6 w-full">
+          <div className="flex min-w-0 flex-1 flex-col">
+            {nameNode}
+            <div className="mt-2">{fieldsNode}</div>
+          </div>
+          {photoNode}
+        </div>
+      </SectionWrapper>
+    );
+  }
+
   return (
     <SectionWrapper sectionId="basic" className=" w-full">
       <div className="flex flex-col w-full">
         <div className="flex items-center justify-between gap-6">
           <div className="flex-1 min-w-0">
-            {basic.name && nameField.visible !== false && (
-              <motion.h1
-                layout="position"
-                className="font-bold tracking-widest whitespace-normal break-normal [overflow-wrap:normal] text-black"
-                style={{ fontSize: `${(globalSettings?.headerSize || 20) * 2}px`, lineHeight: "1.1", marginBottom: "8px" }}
-              >
-                {basic.name}
-              </motion.h1>
-            )}
+            {nameNode}
           </div>
-          {showPhoto && (
-            <motion.div layout="position" className="shrink-0">
-              <div
-                style={{
-                  width: `${basic.photoConfig?.width || 100}px`,
-                  height: `${basic.photoConfig?.height || 100}px`,
-                  borderRadius: getBorderRadiusValue(basic.photoConfig || { borderRadius: "none", customBorderRadius: 0 }),
-                  overflow: "hidden",
-                }}
-              >
-                <img src={basic.photo} alt={`${basic.name}'s photo`} className="w-full h-full object-cover" />
-              </div>
-            </motion.div>
-          )}
+          {photoNode}
         </div>
 
         <div className="w-full h-[3px] my-4" style={{ backgroundColor: globalSettings?.themeColor || "#000" }} />
@@ -108,53 +184,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
               </motion.h2>
             </div>
           )}
-
-          <motion.div layout="position" className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 uppercase tracking-[0.05em] text-gray-500 w-[80%] flex-shrink-0" style={{ fontSize: `${globalSettings?.baseFontSize || 14}px` }}>
-            {allFields.map((item) => {
-              const customFieldHref =
-                item.custom && "href" in item && typeof item.href === "string"
-                  ? item.href
-                  : null;
-
-              return (
-                <div key={item.key} className="flex items-start gap-2">
-                  {globalSettings?.useIconMode && (
-                    <span className="inline-flex shrink-0 text-gray-400">
-                      {getIcon(item.custom ? (item as any).icon : basic.icons?.[item.key as keyof typeof basic.icons])}
-                    </span>
-                  )}
-                  <div className="min-w-0">
-                    {item.key === "email" ? (
-                      <a href={`mailto:${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
-                        {globalSettings?.useIconMode ? "" : `${t(`basicPanel.basicFields.${item.key}`)}: `}
-                        {item.value}
-                      </a>
-                    ) : item.key === "website" || item.key === "github" ? (
-                      <a href={item.value.startsWith("http") ? item.value : `https://${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
-                        {globalSettings?.useIconMode ? "" : `${item.label}: `}
-                        {item.value.replace(/^https?:\/\//, "")}
-                      </a>
-                    ) : customFieldHref ? (
-                      <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="block min-w-0 underline transition-colors [overflow-wrap:anywhere] hover:text-black">
-                        {item.value}
-                      </a>
-                    ) : (
-                      <span className="block min-w-0 [overflow-wrap:anywhere]">
-                        {globalSettings?.useIconMode
-                          ? ""
-                          : item.custom
-                            ? shouldShowCustomFieldLabelPrefix(item)
-                              ? `${item.label}: `
-                              : ""
-                            : `${t(`basicPanel.basicFields.${item.key}`)}: `}
-                        {item.value}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </motion.div>
+          {fieldsNode}
         </div>
       </div>
     </SectionWrapper>

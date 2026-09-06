@@ -557,6 +557,10 @@
       "basicField": "Basic",
       "customField": "Custom",
       "layout": "Align",
+      "layoutLeft": "Left",
+      "layoutCenter": "Center",
+      "layoutRight": "Right",
+      "layoutNameTop": "Name on top",
       "customFields": {
         "placeholders": {
           "label": "Label",

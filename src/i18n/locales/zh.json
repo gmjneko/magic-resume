@@ -509,6 +509,7 @@
       "layoutLeft": "居左",
       "layoutCenter": "居中",
       "layoutRight": "居右",
+      "layoutNameTop": "姓名置顶",
       "avatar": "头像",
       "customFields": {
         "placeholders": {

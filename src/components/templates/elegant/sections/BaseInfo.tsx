@@ -65,43 +65,60 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     };
 
     const styles = layoutStyles[layout as keyof typeof layoutStyles] || layoutStyles.left;
+    const isNameTop = layout === "nameTop";
+
+    const nameNode = nameField.visible !== false && basic[nameField.key] && (
+        <motion.h1 layout="position" className="font-bold whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: isNameTop ? "26px" : "30px" }}>{basic[nameField.key] as string}</motion.h1>
+    );
+    const titleNode = !isNameTop && titleField.visible !== false && basic[titleField.key] && (
+        <motion.h2 layout="position" className="whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "18px" }}>{basic[titleField.key] as string}</motion.h2>
+    );
+    const fieldsNode = (
+        <motion.div layout="position" className={isNameTop ? "grid min-w-0 grid-cols-2 gap-x-6 gap-y-2 justify-start" : styles.fields} style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, color: "rgb(75, 85, 99)", maxWidth: isNameTop || layout === "center" ? "none" : "600px" }}>
+            {allFields.map((item) => {
+                const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;
+
+                return (
+                <motion.div key={item.key} className="flex min-w-0 items-start text-baseFont">
+                    {useIconMode ? (
+                        <div className="flex min-w-0 items-start gap-1">
+                            {getIcon(item.icon)}
+                            {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]">{item.value}</span>}
+                        </div>
+                    ) : (
+                        <div className="flex min-w-0 items-start gap-2">
+                            {!item.custom && <span className="shrink-0">{t(`basicPanel.basicFields.${item.key}`)}:</span>}
+                            {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span className="shrink-0">{item.label}:</span>}
+                            {customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</span>}
+                        </div>
+                    )}
+                </motion.div>
+            )})}
+        </motion.div>
+    );
 
     return (
         <SectionWrapper sectionId="basic">
-            <div className={styles.container}>
-                <div className={styles.leftContent}>
-                    {PhotoComponent}
-                    <div className={cn("flex flex-col", styles.nameTitle)}>
-                        {nameField.visible !== false && basic[nameField.key] && (
-                            <motion.h1 layout="position" className="font-bold whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "30px" }}>{basic[nameField.key] as string}</motion.h1>
-                        )}
-                        {titleField.visible !== false && basic[titleField.key] && (
-                            <motion.h2 layout="position" className="whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "18px" }}>{basic[titleField.key] as string}</motion.h2>
-                        )}
+            {isNameTop ? (
+                <div className="flex items-start justify-between gap-6">
+                    <div className="flex min-w-0 flex-1 flex-col gap-2 text-left">
+                        {nameNode}
+                        {fieldsNode}
                     </div>
+                    <div className="shrink-0">{PhotoComponent}</div>
                 </div>
-                <motion.div layout="position" className={styles.fields} style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, color: "rgb(75, 85, 99)", maxWidth: layout === "center" ? "none" : "600px" }}>
-                    {allFields.map((item) => {
-                        const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;
-
-                        return (
-                        <motion.div key={item.key} className="flex min-w-0 items-start text-baseFont">
-                            {useIconMode ? (
-                                <div className="flex min-w-0 items-start gap-1">
-                                    {getIcon(item.icon)}
-                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]">{item.value}</span>}
-                                </div>
-                            ) : (
-                                <div className="flex min-w-0 items-start gap-2">
-                                    {!item.custom && <span className="shrink-0">{t(`basicPanel.basicFields.${item.key}`)}:</span>}
-                                    {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span className="shrink-0">{item.label}:</span>}
-                                    {customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</span>}
-                                </div>
-                            )}
-                        </motion.div>
-                    )})}
-                </motion.div>
-            </div>
+            ) : (
+                <div className={styles.container}>
+                    <div className={styles.leftContent}>
+                        {PhotoComponent}
+                        <div className={cn("flex flex-col", styles.nameTitle)}>
+                            {nameNode}
+                            {titleNode}
+                        </div>
+                    </div>
+                    {fieldsNode}
+                </div>
+            )}
             {basic.githubContributionsVisible && (
                 <GithubContribution className="mt-2" githubKey={basic.githubKey} username={basic.githubUseName} />
             )}

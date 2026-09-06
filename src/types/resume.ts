@@ -78,8 +78,10 @@ export interface BasicInfo {
   githubKey: string;
   githubUseName: string;
   githubContributionsVisible: boolean;
-  layout?: "left" | "center" | "right";
+  layout?: BasicLayout;
 }
+
+export type BasicLayout = "left" | "center" | "right" | "nameTop";
 
 export interface Education {
   id: string;
