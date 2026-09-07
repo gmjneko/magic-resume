@@ -62,9 +62,9 @@
     "dayjs": "^1.11.12",
     "framer-motion": "^11.11.10",
     "html2canvas": "^1.4.1",
-    "html2pdf.js": "^0.10.2",
-    "jspdf": "2.5.2",
-    "lodash": "^4.17.21",
+    "html2pdf.js": "0.14.0",
+    "jspdf": "4.2.1",
+    "lodash": "4.17.21",
     "lucide-react": "^0.379.0",
     "mark.js": "^8.11.1",
     "markdown-exit": "1.0.0-beta.8",
@@ -83,7 +83,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "turndown": "^7.2.2",
-    "undici": "^7.22.0",
+    "undici": "8.9.0",
     "uuid": "^11.0.5",
     "vaul": "^1.1.1",
     "zustand": "^4.5.4"
@@ -99,15 +99,15 @@
     "changelogen": "^0.6.2",
     "eslint": "^8",
     "playwright": "^1.58.2",
-    "postcss": "^8",
+    "postcss": "8.5.23",
     "postcss-normalize": "^13.0.1",
     "react-grab": "^0.2.0",
     "sass": "^1.77.4",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.21.0",
     "typescript": "^5",
-    "vite": "^7.3.1",
+    "vite": "8.0.16",
     "vite-tsconfig-paths": "^6.1.1",
-    "wrangler": "^4.19.1"
+    "wrangler": "4.59.1"
   }
 }
