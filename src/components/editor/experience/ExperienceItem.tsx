@@ -9,6 +9,7 @@ import {
 import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import Field from "../Field";
+import LogoUploader from "./LogoUploader";
 import { Experience } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -37,18 +38,31 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
   return (
     <div className="space-y-5">
       <div className="grid gap-5">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1fr)] items-center gap-x-4 gap-y-1.5">
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.logo")}
+          </span>
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.company")}
+          </span>
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.position")}
+          </span>
+          <LogoUploader
+            value={experience.logo}
+            onChange={(value) => handleChange("logo", value)}
+          />
           <Field
-            label={t("labels.company")}
             value={experience.company}
             onChange={(value) => handleChange("company", value)}
             placeholder={t("placeholders.company")}
+            className="h-10"
           />
           <Field
-            label={t("labels.position")}
             value={experience.position}
             onChange={(value) => handleChange("position", value)}
             placeholder={t("placeholders.position")}
+            className="h-10"
           />
         </div>
         <Field
@@ -149,11 +163,20 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
           <div className="flex-1 min-w-0">
             <h3
               className={cn(
-                "font-medium truncate",
+                "flex items-center gap-2 font-medium",
                 "text-foreground"
               )}
             >
-              {experience.company || "家里蹲公司"}
+              {experience.logo ? (
+                <img
+                  src={experience.logo}
+                  alt=""
+                  className="h-5 w-5 shrink-0 object-contain"
+                />
+              ) : null}
+              <span className="truncate">
+                {experience.company || "家里蹲公司"}
+              </span>
             </h3>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">

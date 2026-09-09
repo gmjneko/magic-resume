@@ -7,6 +7,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import CompanyHeading from "../../shared/CompanyHeading";
 
 interface ExperienceSectionProps {
   experiences?: Experience[];
@@ -30,7 +31,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
             
             {/* Title: Company as Priority */}
             <motion.h4 layout="position" className="font-bold text-black" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
-              {exp.company}
+              <CompanyHeading company={exp.company} logo={exp.logo} />
             </motion.h4>
             
             {/* Position & Date */}

@@ -103,6 +103,7 @@ export interface Experience {
   date: string;
   details: string;
   visible?: boolean;
+  logo?: string;
 }
 
 export interface Skill {

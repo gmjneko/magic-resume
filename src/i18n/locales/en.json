@@ -604,10 +604,16 @@
     },
     "experienceItem": {
       "labels": {
+        "logo": "Logo",
         "company": "Company Name",
         "position": "Position",
         "date": "Employment Period",
         "details": "Job Responsibilities"
+      },
+      "logo": {
+        "hint": "Upload",
+        "change": "Change logo",
+        "remove": "Remove logo"
       },
       "placeholders": {
         "company": "Enter company name",

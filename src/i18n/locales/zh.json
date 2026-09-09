@@ -553,10 +553,16 @@
     },
     "experienceItem": {
       "labels": {
+        "logo": "LOGO",
         "company": "公司名称",
         "position": "岗位",
         "date": "工作时间",
         "details": "工作职责"
+      },
+      "logo": {
+        "hint": "上传",
+        "change": "更换 Logo",
+        "remove": "移除 Logo"
       },
       "placeholders": {
         "company": "请输入公司名称",
