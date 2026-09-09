@@ -88,7 +88,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                     <div className="flex min-w-0 items-start gap-1">
                         {useIconMode && getIcon(item.icon)}
                         {showLabel && labelText && <span className="shrink-0">{labelText}:</span>}
-                        {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</span>}
+                        {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 no-underline [overflow-wrap:anywhere]">{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 no-underline [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</span>}
                     </div>
                 </motion.div>
             )})}

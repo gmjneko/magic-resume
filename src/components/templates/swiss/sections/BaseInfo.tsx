@@ -148,14 +148,14 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                                     href={customFieldHref}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="font-medium text-slate-600 hover:text-slate-900 underline truncate break-all [overflow-wrap:anywhere]"
+                                    className="font-medium text-slate-600 hover:text-slate-900 no-underline truncate break-all [overflow-wrap:anywhere]"
                                 >
                                     {item.value}
                                 </a>
                             ) : item.key === "email" ? (
                                 <a
                                     href={`mailto:${item.value}`}
-                                    className="font-medium text-slate-600 hover:text-slate-900 underline truncate break-all [overflow-wrap:anywhere]"
+                                    className="font-medium text-slate-600 hover:text-slate-900 no-underline truncate break-all [overflow-wrap:anywhere]"
                                 >
                                     {item.value}
                                 </a>

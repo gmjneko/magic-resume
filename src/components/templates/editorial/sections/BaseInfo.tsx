@@ -132,7 +132,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                   {item.value.replace(/^https?:\/\//, "")}
                 </a>
               ) : customFieldHref ? (
-                <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="block min-w-0 underline transition-colors [overflow-wrap:anywhere] hover:text-black">
+                <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="block min-w-0 no-underline transition-colors [overflow-wrap:anywhere] hover:text-black">
                   {labelPrefix}
                   {item.value}
                 </a>
