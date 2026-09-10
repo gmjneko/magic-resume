@@ -28,7 +28,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
                     {visibleExperiences?.map((exp) => (
                         <motion.div key={exp.id} layout="position" className="group">
                             {/* 不对称网格对齐头部 */}
-                            <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center justify-between gap-3 leading-none">
                                 <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
                                     <h4 
                                         className="font-extrabold text-slate-800 tracking-tight"

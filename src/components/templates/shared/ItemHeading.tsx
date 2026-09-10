@@ -14,7 +14,7 @@ const ItemHeading: React.FC<ItemHeadingProps> = ({
   return (
     <span
       className={cn(
-        "inline-flex max-w-full min-w-0 items-center gap-[0.4em]",
+        "flex max-w-full min-w-0 items-center gap-[0.35em] leading-none",
         className
       )}
     >
@@ -22,11 +22,11 @@ const ItemHeading: React.FC<ItemHeadingProps> = ({
         <img
           src={logo}
           alt=""
-          className="shrink-0 object-contain"
-          style={{ width: "1.35em", height: "1.35em" }}
+          className="block shrink-0 object-contain"
+          style={{ width: "1.15em", height: "1.15em" }}
         />
       ) : null}
-      <span className="truncate">{title}</span>
+      <span className="truncate leading-none">{title}</span>
     </span>
   );
 };

@@ -33,7 +33,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
 
                         return (
                         <motion.div key={project.id} style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
-                            <motion.div className="flex items-center justify-between gap-4">
+                            <motion.div className="flex items-center justify-between gap-4 leading-none">
                                 <div className={cn("flex items-center gap-2 truncate", flexLayout ? "" : "flex-1")}>
                                     <h3 className="font-bold truncate" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}><ItemHeading title={project.name} logo={project.logo} /></h3>
                                 </div>

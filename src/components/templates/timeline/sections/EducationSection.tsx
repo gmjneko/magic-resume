@@ -25,7 +25,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
             <AnimatePresence mode="popLayout">
                 {visibleEducation?.map((edu) => (
                     <motion.div key={edu.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
-                        <motion.div layout="position" className="flex items-center gap-2">
+                        <motion.div layout="position" className="flex items-center gap-2 leading-none">
                             <div className={`font-bold min-w-0 ${flexLayout ? "" : "flex-[1.5]"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                 <ItemHeading title={edu.school} logo={edu.logo} />
                             </div>
