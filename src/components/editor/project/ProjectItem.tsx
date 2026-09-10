@@ -10,6 +10,7 @@ import {
 import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import Field from "../Field";
+import LogoUploader from "../shared/LogoUploader";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useTranslations } from "@/i18n/compat/client";
 import { Project } from "@/types/resume";
@@ -34,18 +35,31 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
   return (
     <div className="space-y-5">
       <div className="grid gap-5">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1fr)] items-center gap-x-4 gap-y-1.5">
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.logo")}
+          </span>
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.name")}
+          </span>
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.role")}
+          </span>
+          <LogoUploader
+            value={project.logo}
+            onChange={(value) => handleChange("logo", value)}
+          />
           <Field
-            label={t("labels.name")}
             value={project.name}
             onChange={(value) => handleChange("name", value)}
             placeholder={t("placeholders.name")}
+            className="h-10"
           />
           <Field
-            label={t("labels.role")}
             value={project.role}
             onChange={(value) => handleChange("role", value)}
             placeholder={t("placeholders.role")}
+            className="h-10"
           />
         </div>
         <div className="space-y-2">
@@ -191,11 +205,18 @@ const ProjectItem = ({ project }: { project: Project }) => {
           <div className="flex-1 min-w-0">
             <h3
               className={cn(
-                "font-medium truncate",
+                "flex items-center gap-2 font-medium",
                 "text-gray-700 dark:text-neutral-200"
               )}
             >
-              {project.name || "未命名项目"}
+              {project.logo ? (
+                <img
+                  src={project.logo}
+                  alt=""
+                  className="h-5 w-5 shrink-0 object-contain"
+                />
+              ) : null}
+              <span className="truncate">{project.name || "未命名项目"}</span>
             </h3>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">

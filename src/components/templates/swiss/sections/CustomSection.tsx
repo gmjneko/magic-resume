@@ -6,6 +6,7 @@ import { GlobalSettings, CustomItem } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import ItemHeading from "../../shared/ItemHeading";
 
 interface CustomSectionProps {
     sectionId: string;
@@ -29,13 +30,13 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                     {visibleItems.map((item) => (
                         <motion.div key={item.id} layout="position" className="group">
                             {/* 不对称网格对齐头部 */}
-                            <div className="flex items-baseline justify-between gap-3">
-                                <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-1">
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
                                     <h4 
                                         className="font-extrabold text-slate-800 tracking-tight"
                                         style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}
                                     >
-                                        {item.title}
+                                        <ItemHeading title={item.title} logo={item.logo} />
                                     </h4>
                                     {centerSubtitle && (
                                         <span 

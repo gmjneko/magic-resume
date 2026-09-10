@@ -8,6 +8,7 @@ import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
 import { getProjectLinkMeta } from "@/lib/projectLink";
+import ItemHeading from "../../shared/ItemHeading";
 
 interface ProjectSectionProps {
     projects: Project[];
@@ -34,13 +35,13 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                         return (
                             <motion.div key={project.id} layout="position" className="group">
                                 {/* 项目排版头部 */}
-                                <div className="flex items-baseline justify-between gap-3">
+                                <div className="flex items-center justify-between gap-3">
                                     <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
                                         <h4 
                                             className="font-extrabold text-slate-800 tracking-tight"
                                             style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}
                                         >
-                                            {project.name}
+                                            <ItemHeading title={project.name} logo={project.logo} />
                                         </h4>
                                         {centerSubtitle && (
                                             <span 

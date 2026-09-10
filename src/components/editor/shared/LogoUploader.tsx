@@ -11,7 +11,7 @@ interface LogoUploaderProps {
 }
 
 const LogoUploader = ({ value, onChange }: LogoUploaderProps) => {
-  const t = useTranslations("workbench.experienceItem");
+  const t = useTranslations("workbench.logo");
   const uploadT = useTranslations("photoConfig.upload");
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -42,7 +42,7 @@ const LogoUploader = ({ value, onChange }: LogoUploaderProps) => {
           "hover:bg-muted/50",
           isDragging && "ring-2 ring-inset ring-primary"
         )}
-        title={value ? t("logo.change") : t("logo.hint")}
+        title={value ? t("change") : t("hint")}
         onClick={() => inputRef.current?.click()}
         onDragOver={(event) => {
           event.preventDefault();
@@ -78,7 +78,7 @@ const LogoUploader = ({ value, onChange }: LogoUploaderProps) => {
         <button
           type="button"
           className="absolute -right-1.5 -top-1.5 z-10 rounded-full bg-background p-0.5 text-muted-foreground shadow-sm ring-1 ring-inset ring-input hover:bg-destructive hover:text-destructive-foreground hover:ring-destructive"
-          title={t("logo.remove")}
+          title={t("remove")}
           onClick={(event) => {
             event.stopPropagation();
             onChange("");

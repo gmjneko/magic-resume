@@ -5,6 +5,7 @@ import { GlobalSettings, CustomItem } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import ItemHeading from "../../shared/ItemHeading";
 
 interface CustomSectionProps {
   sectionId: string;
@@ -26,7 +27,7 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
           <motion.div key={item.id} layout="position" className="relative pb-6 last:pb-0" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
             <motion.div layout="position" className="flex items-center gap-2">
               <div className="flex-[1.5]">
-                <h4 className="font-bold text-black" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px` }}>{item.title}</h4>
+                <h4 className="font-bold text-black" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px` }}><ItemHeading title={item.title} logo={item.logo} /></h4>
               </div>
               {item.subtitle && (
                 <motion.div layout="position" className="flex-1 text-gray-500" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>

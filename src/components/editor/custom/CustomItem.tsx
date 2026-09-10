@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
 import Field from "../Field";
+import LogoUploader from "../shared/LogoUploader";
 
 import { CustomItem as CustomItemType } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
@@ -27,18 +28,31 @@ const CustomItemEditor = ({
   return (
     <div className="space-y-5">
       <div className="grid gap-5">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1fr)] items-center gap-x-4 gap-y-1.5">
+          <span className="text-sm font-medium leading-5 text-foreground">
+            LOGO
+          </span>
+          <span className="text-sm font-medium leading-5 text-foreground">
+            标题
+          </span>
+          <span className="text-sm font-medium leading-5 text-foreground">
+            副标题
+          </span>
+          <LogoUploader
+            value={item.logo}
+            onChange={(value) => handleChange("logo", value)}
+          />
           <Field
-            label="标题"
             value={item.title}
             onChange={(value) => handleChange("title", value)}
             placeholder="标题"
+            className="h-10"
           />
           <Field
-            label="副标题"
             value={item.subtitle}
             onChange={(value) => handleChange("subtitle", value)}
             placeholder="副标题"
+            className="h-10"
           />
         </div>
 
@@ -133,10 +147,17 @@ const CustomItem = ({
           <div className="flex-1 min-w-0">
             <h3
               className={cn(
-                 "font-medium truncate text-foreground"
+                 "flex items-center gap-2 font-medium text-foreground"
               )}
             >
-              {item.title || "未命名模块"}
+              {item.logo ? (
+                <img
+                  src={item.logo}
+                  alt=""
+                  className="h-5 w-5 shrink-0 object-contain"
+                />
+              ) : null}
+              <span className="truncate">{item.title || "未命名模块"}</span>
             </h3>
             {item.subtitle && (
               <p

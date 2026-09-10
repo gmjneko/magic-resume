@@ -7,6 +7,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateRange } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import ItemHeading from "../../shared/ItemHeading";
 
 interface EducationSectionProps {
   education?: Education[];
@@ -28,7 +29,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({ education, globalSe
             {showTimeline && <div className="absolute left-[-2.25px] top-2.5 w-1.5 h-1.5 bg-black rounded-full" />}
             
             <motion.h4 layout="position" className="font-bold text-black" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
-              {edu.school}
+              <ItemHeading title={edu.school} logo={edu.logo} />
             </motion.h4>
             
             <motion.div layout="position" className="uppercase tracking-[0.1em] text-gray-500 mt-2" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>

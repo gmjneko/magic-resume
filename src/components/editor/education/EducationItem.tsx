@@ -11,6 +11,7 @@ import {
 import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
 import { useState, useCallback } from "react";
 import Field from "../Field";
+import LogoUploader from "../shared/LogoUploader";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useTranslations } from "@/i18n/compat/client";
 
@@ -36,18 +37,31 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
   return (
     <div className="space-y-5">
       <div className="grid gap-5">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1fr)] items-center gap-x-4 gap-y-1.5">
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.logo")}
+          </span>
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.school")}
+          </span>
+          <span className="text-sm font-medium leading-5 text-foreground">
+            {t("labels.major")}
+          </span>
+          <LogoUploader
+            value={education.logo}
+            onChange={(value) => handleChange("logo", value)}
+          />
           <Field
-            label={t("labels.school")}
             value={education.school}
             onChange={(value) => handleChange("school", value)}
             placeholder={t("placeholders.school")}
+            className="h-10"
           />
           <Field
-            label={t("labels.major")}
             value={education.major}
             onChange={(value) => handleChange("major", value)}
             placeholder={t("placeholders.major")}
+            className="h-10"
           />
         </div>
 
@@ -174,8 +188,15 @@ const EducationItem = ({ education }: { education: Education }) => {
           }}
         >
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3">
-              <div>
+            <div className="flex items-center gap-3 min-w-0">
+              {education.logo ? (
+                <img
+                  src={education.logo}
+                  alt=""
+                  className="h-5 w-5 shrink-0 object-contain"
+                />
+              ) : null}
+              <div className="min-w-0">
                 <h3
                   className={cn(
                     "font-medium truncate",

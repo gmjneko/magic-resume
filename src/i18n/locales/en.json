@@ -482,6 +482,12 @@
     }
   },
   "workbench": {
+    "logo": {
+      "label": "LOGO",
+      "hint": "Upload",
+      "change": "Change logo",
+      "remove": "Remove logo"
+    },
     "sidePanel": {
       "layout": {
         "title": "Layout",
@@ -651,6 +657,7 @@
     },
     "projectItem": {
       "labels": {
+        "logo": "LOGO",
         "name": "Project Name",
         "role": "Project Role",
         "date": "Project Period",
@@ -700,6 +707,7 @@
     },
     "educationItem": {
       "labels": {
+        "logo": "LOGO",
         "school": "School Name",
         "degree": "Degree",
         "major": "Major",

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import ItemHeading from "./ItemHeading";
 
 interface CompanyHeadingProps {
   company?: string;
@@ -11,24 +11,7 @@ const CompanyHeading: React.FC<CompanyHeadingProps> = ({
   logo,
   className,
 }) => {
-  return (
-    <span
-      className={cn(
-        "inline-flex max-w-full min-w-0 items-center gap-[0.4em]",
-        className
-      )}
-    >
-      {logo ? (
-        <img
-          src={logo}
-          alt=""
-          className="shrink-0 object-contain"
-          style={{ width: "1.35em", height: "1.35em" }}
-        />
-      ) : null}
-      <span className="truncate">{company}</span>
-    </span>
-  );
+  return <ItemHeading title={company} logo={logo} className={className} />;
 };
 
 export default CompanyHeading;

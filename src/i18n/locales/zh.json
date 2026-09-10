@@ -431,6 +431,12 @@
     }
   },
   "workbench": {
+    "logo": {
+      "label": "LOGO",
+      "hint": "上传",
+      "change": "更换 Logo",
+      "remove": "移除 Logo"
+    },
     "sidePanel": {
       "layout": {
         "title": "布局",
@@ -602,6 +608,7 @@
     },
     "projectItem": {
       "labels": {
+        "logo": "LOGO",
         "name": "项目名称",
         "role": "项目角色",
         "date": "项目时间",
@@ -649,6 +656,7 @@
     },
     "educationItem": {
       "labels": {
+        "logo": "LOGO",
         "school": "学校名称",
         "degree": "学历",
         "major": "专业",

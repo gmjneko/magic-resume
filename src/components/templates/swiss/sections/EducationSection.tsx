@@ -6,6 +6,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { useLocale } from "@/i18n/compat/client";
 import { hasMeaningfulRichTextContent, normalizeRichTextContent } from "@/lib/richText";
 import { formatDateRange } from "@/lib/utils";
+import ItemHeading from "../../shared/ItemHeading";
 
 interface EducationSectionProps {
     education?: Education[];
@@ -27,13 +28,13 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                     {visibleEducation?.map((edu) => (
                         <motion.div key={edu.id} layout="position" className="group">
                             {/* 不对称网格对齐头部 */}
-                            <div className="flex items-baseline justify-between gap-3">
-                                <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-1">
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
                                     <h4 
                                         className="font-extrabold text-slate-800 tracking-tight"
                                         style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}
                                     >
-                                        {edu.school}
+                                        <ItemHeading title={edu.school} logo={edu.logo} />
                                     </h4>
                                     {centerSubtitle && (
                                         <span 
