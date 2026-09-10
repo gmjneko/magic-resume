@@ -39,13 +39,13 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                                 </div>
                                 {projectLink && !centerSubtitle && (
                                     <a href={projectLink.href} target="_blank" rel="noopener noreferrer"
-                                        className={cn("underline truncate shrink", flexLayout ? "" : "flex-1")} title={projectLink.title} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                        className={cn("underline truncate min-w-0", flexLayout ? "" : "flex-[1.5]")} title={projectLink.title} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                         {projectLink.label}
                                     </a>
                                 )}
-                                {!projectLink && !centerSubtitle && !flexLayout && <div className="flex-1" />}
+                                {!projectLink && !centerSubtitle && !flexLayout && <div className="flex-[1.5]" />}
                                 {centerSubtitle && (
-                                    <motion.div layout="position" className={cn("text-subtitleFont truncate", flexLayout ? "ml-[16px]" : "flex-1")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                    <motion.div layout="position" className={cn("text-subtitleFont truncate min-w-0", flexLayout ? "ml-[16px]" : "flex-[1.5]")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                         {project.role}
                                     </motion.div>
                                 )}

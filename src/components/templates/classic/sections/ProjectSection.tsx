@@ -34,22 +34,22 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                         return (
                         <motion.div key={project.id} style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                             <motion.div className="flex items-center gap-2">
-                                <div className={`flex items-center gap-2 ${flexLayout ? "" : "flex-[1.5]"}`}>
-                                    <h3 className="font-bold" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}><ItemHeading title={project.name} logo={project.logo} /></h3>
+                                <div className={`flex min-w-0 items-center gap-2 ${flexLayout ? "" : "flex-1"}`}>
+                                    <h3 className="min-w-0 font-bold" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}><ItemHeading title={project.name} logo={project.logo} /></h3>
                                 </div>
                                 {projectLink && !centerSubtitle && (
                                     <a href={projectLink.href} target="_blank" rel="noopener noreferrer"
-                                        className={`underline ${flexLayout ? "" : "flex-1"}`} title={projectLink.title} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                        className={`underline min-w-0 ${flexLayout ? "" : "flex-[1.5]"}`} title={projectLink.title} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                         {projectLink.label}
                                     </a>
                                 )}
-                                {!projectLink && !centerSubtitle && !flexLayout && <div className="flex-1" />}
+                                {!projectLink && !centerSubtitle && !flexLayout && <div className="flex-[1.5]" />}
                                 {centerSubtitle && (
-                                    <motion.div layout="position" className={`text-subtitleFont ${flexLayout ? "ml-[16px]" : "flex-1"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                    <motion.div layout="position" className={`text-subtitleFont min-w-0 ${flexLayout ? "ml-[16px]" : "flex-[1.5]"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                         {project.role}
                                     </motion.div>
                                 )}
-                                <div className={`text-subtitleFont shrink-0 ${flexLayout ? "ml-auto" : "flex-1 text-right"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                <div className={`text-subtitleFont shrink-0 ml-auto ${flexLayout ? "" : "text-right"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                     {formatDateString(project.date, locale)}
                                 </div>
                             </motion.div>
