@@ -354,6 +354,28 @@ export function SidePanel({
 
             <div className="space-y-2">
               <Label className="text-muted-foreground">
+                {t("typography.basicInfoLineHeight.title")}
+              </Label>
+              <div className="flex items-center gap-4">
+                <Slider
+                  value={[globalSettings?.basicInfoLineHeight ?? 1.5]}
+                  min={1}
+                  max={2}
+                  step={0.1}
+                  onValueChange={([value]) =>
+                    updateGlobalSettings?.({
+                      basicInfoLineHeight: Math.round(value * 10) / 10,
+                    })
+                  }
+                />
+                <span className="min-w-[3ch] text-sm text-muted-foreground">
+                  {globalSettings?.basicInfoLineHeight ?? 1.5}
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-muted-foreground">
                 {t("typography.baseFontSize.title")}
               </Label>
               <Select

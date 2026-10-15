@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
 import { BasicInfo, GlobalSettings, getBorderRadiusValue } from "@/types/resume";
 import SectionWrapper from "../../shared/SectionWrapper";
+import { getBasicInfoPhotoSize, getBasicInfoSpacing } from "@/lib/basicInfoSpacing";
+import { BasicInfoPhoto } from "../../shared/BasicInfoPhoto";
 import { formatDateString } from "@/lib/utils";
 import { useLocale, useTranslations } from "@/i18n/compat/client";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
@@ -17,6 +19,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
   const locale = useLocale();
   const t = useTranslations("workbench");
   const isNameTop = basic.layout === "nameTop";
+  const basicInfoSpacing = getBasicInfoSpacing(globalSettings?.basicInfoLineHeight);
 
   const getOrderedFields = React.useMemo(() => {
     if (!basic.fieldOrder) {
@@ -61,7 +64,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
 
   const getIcon = (iconName: string | undefined) => {
     const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
-    return IconComponent ? <IconComponent className="mt-[0.2em] h-3.5 w-3.5 shrink-0" /> : null;
+    return IconComponent ? <IconComponent className="h-[0.9em] w-[0.9em] shrink-0" /> : null;
   };
 
   const showPhoto = basic.photo && basic.photoConfig?.visible;
@@ -70,8 +73,8 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
     <motion.div layout="position" className="shrink-0">
       <div
         style={{
-          width: `${basic.photoConfig?.width || 100}px`,
-          height: `${basic.photoConfig?.height || 100}px`,
+          width: `${getBasicInfoPhotoSize(basic.photoConfig?.width, 100, globalSettings?.basicInfoLineHeight)}px`,
+          height: `${getBasicInfoPhotoSize(basic.photoConfig?.height, 100, globalSettings?.basicInfoLineHeight)}px`,
           borderRadius: getBorderRadiusValue(basic.photoConfig || { borderRadius: "none", customBorderRadius: 0 }),
           overflow: "hidden",
         }}
@@ -99,7 +102,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
           ? "flex flex-wrap items-center justify-start gap-x-6 gap-y-2 uppercase tracking-[0.05em] text-gray-500"
           : "flex flex-wrap items-center justify-end gap-x-6 gap-y-2 uppercase tracking-[0.05em] text-gray-500 w-[80%] flex-shrink-0"
       }
-      style={{ fontSize: `${globalSettings?.baseFontSize || 14}px` }}
+      style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, ...basicInfoSpacing }}
     >
       {allFields.map((item) => {
         const customFieldHref =
@@ -114,7 +117,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
         const labelPrefix = showLabel && labelText ? `${labelText}: ` : "";
 
         return (
-          <div key={item.key} className="flex items-start gap-2">
+          <div key={item.key} className="flex items-center gap-2">
             {useIconMode && (
               <span className="inline-flex shrink-0 text-gray-400">
                 {getIcon(item.custom ? (item as any).icon : basic.icons?.[item.key as keyof typeof basic.icons])}
@@ -152,12 +155,19 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
   if (isNameTop) {
     return (
       <SectionWrapper sectionId="basic" className=" w-full">
-        <div className="flex items-start justify-between gap-6 w-full">
+        <div className="flex items-stretch justify-between gap-6 w-full">
           <div className="flex min-w-0 flex-1 flex-col">
             {nameNode}
-            <div className="mt-2">{fieldsNode}</div>
+            <div style={basicInfoSpacing ? { marginTop: basicInfoSpacing.rowGap } : undefined} className={basicInfoSpacing ? undefined : "mt-2"}>{fieldsNode}</div>
           </div>
-          {photoNode}
+          <BasicInfoPhoto
+            src={basic.photo}
+            alt={`${basic.name}'s photo`}
+            width={getBasicInfoPhotoSize(basic.photoConfig?.width, 100, globalSettings?.basicInfoLineHeight)}
+            height={getBasicInfoPhotoSize(basic.photoConfig?.height, 100, globalSettings?.basicInfoLineHeight)}
+            config={basic.photoConfig}
+            fitBlock
+          />
         </div>
       </SectionWrapper>
     );

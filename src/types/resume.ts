@@ -138,6 +138,7 @@ export type GlobalSettings = {
   pagePadding?: number | undefined;
   paragraphSpacing?: number | undefined;
   lineHeight?: number | undefined;
+  basicInfoLineHeight?: number | undefined;
   sectionSpacing?: number | undefined;
   headerSize?: number | undefined;
   subheaderSize?: number | undefined;

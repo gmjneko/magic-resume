@@ -522,6 +522,9 @@
           "relaxed": "Relaxed",
           "loose": "Loose"
         },
+        "basicInfoLineHeight": {
+          "title": "Profile Line Spacing"
+        },
         "baseFontSize": {
           "title": "Base Font Size"
         },

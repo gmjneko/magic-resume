@@ -1,9 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
+import { getBasicInfoPhotoSize, getBasicInfoSpacing } from "@/lib/basicInfoSpacing";
 import { formatDateString } from "@/lib/utils";
 import { BasicInfo, getBorderRadiusValue, GlobalSettings } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
+import { BasicInfoPhoto } from "../../shared/BasicInfoPhoto";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
@@ -23,10 +25,11 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     const locale = useLocale();
     const useIconMode = globalSettings?.useIconMode ?? false;
     const layout = basic?.layout || "left";
+    const basicInfoSpacing = getBasicInfoSpacing(globalSettings?.basicInfoLineHeight);
 
     const getIcon = (iconName: string | undefined) => {
         const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
-        return IconComponent ? <IconComponent className="mt-[0.2em] h-4 w-4 shrink-0" /> : null;
+        return IconComponent ? <IconComponent className="h-[0.9em] w-[0.9em] shrink-0" /> : null;
     };
 
     const getOrderedFields = React.useMemo(() => {
@@ -55,7 +58,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
 
     const PhotoComponent = basic.photo && basic.photoConfig?.visible && (
         <motion.div layout="position">
-            <div style={{ width: `${basic.photoConfig?.width || 100}px`, height: `${basic.photoConfig?.height || 100}px`, borderRadius: getBorderRadiusValue(basic.photoConfig || { borderRadius: "none", customBorderRadius: 0 }), overflow: "hidden" }}>
+            <div style={{ width: `${getBasicInfoPhotoSize(basic.photoConfig?.width, 100, globalSettings?.basicInfoLineHeight)}px`, height: `${getBasicInfoPhotoSize(basic.photoConfig?.height, 100, globalSettings?.basicInfoLineHeight)}px`, borderRadius: getBorderRadiusValue(basic.photoConfig || { borderRadius: "none", customBorderRadius: 0 }), overflow: "hidden" }}>
                 <img src={basic.photo} alt={`${basic.name}'s photo`} className="w-full h-full object-cover" />
             </div>
         </motion.div>
@@ -78,7 +81,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     );
     const fieldsNode = (
         <motion.div layout="position" className={styles.fields}
-            style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, color: "#fff" }}>
+            style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, color: "#fff", ...basicInfoSpacing }}>
             {allFields.map((item) => {
                 const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;
                 const showLabel = item.custom
@@ -88,7 +91,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
 
                 return (
                 <motion.div key={item.key} className="flex min-w-0 items-start text-baseFont" style={{ width: "100%", color: "#fff" }}>
-                    <div className="flex min-w-0 items-start gap-1" style={{ color: "#fff" }}>
+                    <div className="flex min-w-0 items-center gap-1" style={{ color: "#fff" }}>
                         {useIconMode && getIcon(item.icon)}
                         {showLabel && labelText && <span className="shrink-0" style={{ color: "#fff" }}>{labelText}:</span>}
                         {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 no-underline [overflow-wrap:anywhere]" style={{ color: "#fff" }}>{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 no-underline [overflow-wrap:anywhere]" suppressHydrationWarning style={{ color: "#fff" }}>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning style={{ color: "#fff" }}>{item.value}</span>}
@@ -101,12 +104,19 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     return (
         <SectionWrapper sectionId="basic">
             {isNameTop ? (
-                <div className="flex items-start justify-between gap-4">
-                    <div className="flex min-w-0 flex-1 flex-col gap-2 text-left" style={{ color: "#fff" }}>
+                <div className="flex items-stretch justify-between gap-4">
+                    <div className="flex min-w-0 flex-1 flex-col gap-2 text-left" style={{ color: "#fff", ...(basicInfoSpacing ? { rowGap: basicInfoSpacing.rowGap } : {}) }}>
                         {nameNode}
                         {fieldsNode}
                     </div>
-                    <div className="shrink-0">{PhotoComponent}</div>
+                    <BasicInfoPhoto
+                        src={basic.photo}
+                        alt={`${basic.name}'s photo`}
+                        width={getBasicInfoPhotoSize(basic.photoConfig?.width, 100, globalSettings?.basicInfoLineHeight)}
+                        height={getBasicInfoPhotoSize(basic.photoConfig?.height, 100, globalSettings?.basicInfoLineHeight)}
+                        config={basic.photoConfig}
+                        fitBlock
+                    />
                 </div>
             ) : (
                 <div className={styles.container}>

@@ -471,6 +471,9 @@
           "relaxed": "适中",
           "loose": "宽松"
         },
+        "basicInfoLineHeight": {
+          "title": "个人信息行距"
+        },
         "baseFontSize": {
           "title": "基础字号"
         },

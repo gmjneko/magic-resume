@@ -1,6 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
+import { getBasicInfoPhotoSize, getBasicInfoSpacing } from "@/lib/basicInfoSpacing";
+import { BasicInfoPhoto } from "../../shared/BasicInfoPhoto";
 import { formatDateString } from "@/lib/utils";
 import { BasicInfo, getBorderRadiusValue, GlobalSettings } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
@@ -22,10 +24,11 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     const useIconMode = globalSettings?.useIconMode ?? false;
     const layout = basic?.layout || "left";
     const themeColor = globalSettings?.themeColor || "#E31C24";
+    const basicInfoSpacing = getBasicInfoSpacing(globalSettings?.basicInfoLineHeight);
 
     const getIcon = (iconName: string | undefined) => {
         const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
-        return IconComponent ? <IconComponent className="h-3.5 w-3.5 shrink-0" style={{ color: themeColor }} /> : null;
+        return IconComponent ? <IconComponent className="h-[0.9em] w-[0.9em] shrink-0" style={{ color: themeColor }} /> : null;
     };
 
     const getOrderedFields = React.useMemo(() => {
@@ -56,8 +59,8 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
         <motion.div layout="position" className="shrink-0">
             <div 
                 style={{ 
-                    width: `${basic.photoConfig?.width || 90}px`, 
-                    height: `${basic.photoConfig?.height || 90}px`, 
+                    width: `${getBasicInfoPhotoSize(basic.photoConfig?.width, 90, globalSettings?.basicInfoLineHeight)}px`, 
+                    height: `${getBasicInfoPhotoSize(basic.photoConfig?.height, 90, globalSettings?.basicInfoLineHeight)}px`, 
                     borderRadius: getBorderRadiusValue(basic.photoConfig || { borderRadius: "none", customBorderRadius: 0 }), 
                     overflow: "hidden" 
                 }}
@@ -119,7 +122,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
         <motion.div
             layout="position"
             className={isNameTop ? "flex flex-wrap gap-2.5 w-full justify-start mt-2" : styles.cardWrapper}
-            style={{ fontSize: `${globalSettings?.baseFontSize || 13}px` }}
+            style={{ fontSize: `${globalSettings?.baseFontSize || 13}px`, ...basicInfoSpacing }}
         >
             {allFields.map((item) => {
                 const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;
@@ -174,8 +177,8 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     return (
         <SectionWrapper sectionId="basic">
             {isNameTop ? (
-                <div className="flex items-start justify-between gap-6 w-full">
-                    <div className="flex min-w-0 flex-1 flex-col gap-4">
+                <div className="flex items-stretch justify-between gap-6 w-full">
+                    <div className="flex min-w-0 flex-1 flex-col gap-4" style={basicInfoSpacing ? { rowGap: basicInfoSpacing.rowGap } : undefined}>
                         <div className="flex flex-col min-w-0 relative pl-5">
                             <motion.div
                                 key="accent-nameTop"
@@ -187,7 +190,14 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                         </div>
                         {fieldsNode}
                     </div>
-                    {PhotoComponent}
+                    <BasicInfoPhoto
+                        src={basic.photo}
+                        alt={`${basic.name}'s photo`}
+                        width={getBasicInfoPhotoSize(basic.photoConfig?.width, 90, globalSettings?.basicInfoLineHeight)}
+                        height={getBasicInfoPhotoSize(basic.photoConfig?.height, 90, globalSettings?.basicInfoLineHeight)}
+                        config={basic.photoConfig}
+                        fitBlock
+                    />
                 </div>
             ) : (
                 <div className={styles.container}>
