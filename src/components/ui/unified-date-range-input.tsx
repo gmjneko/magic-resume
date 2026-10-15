@@ -1,8 +1,8 @@
-
 import { DateInput } from "@heroui/date-input";
 import { HeroUIProvider } from "@heroui/react";
 import { CalendarDate, parseDate } from "@internationalized/date";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { isPresentToken, splitDateRange } from "@/lib/date-range";
 import { cn } from "@/lib/utils";
 
 interface UnifiedDateRangeInputProps {
@@ -14,12 +14,11 @@ interface UnifiedDateRangeInputProps {
 }
 
 const SEPARATOR = " - ";
-const PRESENT_VALUES = new Set(["至今", "Present", "Now"]);
 
 const parsePart = (part: string): CalendarDate | null => {
   if (!part) return null;
   const cleanPart = part.trim();
-  if (PRESENT_VALUES.has(cleanPart)) return null;
+  if (isPresentToken(cleanPart)) return null;
 
   try {
     let isoStr = cleanPart.replace(/[./]/g, "-");
@@ -34,22 +33,28 @@ const parsePart = (part: string): CalendarDate | null => {
 const parseRange = (rangeValue: string) => {
   if (!rangeValue) return { start: null, end: null };
 
-  let startStr = "";
-  let endStr = "";
-
-  if (rangeValue.includes(SEPARATOR)) {
-    [startStr, endStr] = rangeValue.split(SEPARATOR);
-  } else {
-    const match = rangeValue.match(/^([^\s]+)\s*(?:-|–|—)\s*([^\s]+)$/);
-    if (match) {
-      startStr = match[1];
-      endStr = match[2];
-    } else {
-      startStr = rangeValue;
-    }
+  const parts = splitDateRange(rangeValue);
+  if (!parts) {
+    return { start: parsePart(rangeValue), end: null };
   }
 
-  return { start: parsePart(startStr), end: parsePart(endStr) };
+  return {
+    start: parsePart(parts.start),
+    end: isPresentToken(parts.end) ? null : parsePart(parts.end),
+  };
+};
+
+const sameDate = (left: CalendarDate | null, right: CalendarDate | null) => {
+  if (left === right) return true;
+  if (!left || !right) return false;
+  return left.year === right.year && left.month === right.month && left.day === right.day;
+};
+
+const presentLabelFrom = (rangeValue: string) => {
+  const parts = splitDateRange(rangeValue);
+  if (parts && isPresentToken(parts.end)) return parts.end.trim();
+  if (isPresentToken(rangeValue)) return rangeValue.trim();
+  return "至今";
 };
 
 export function UnifiedDateRangeInput({
@@ -61,7 +66,15 @@ export function UnifiedDateRangeInput({
     () => parseRange(value)
   );
 
-  const isPresent = value.includes("至今") || value.includes("Present");
+  useEffect(() => {
+    const next = parseRange(value);
+    setRange((prev) =>
+      sameDate(prev.start, next.start) && sameDate(prev.end, next.end) ? prev : next
+    );
+  }, [value]);
+
+  const isPresent = isPresentToken(splitDateRange(value)?.end) || isPresentToken(value);
+  const presentLabel = presentLabelFrom(value);
 
   const updateValue = (
     newStart: CalendarDate | null,
@@ -71,7 +84,7 @@ export function UnifiedDateRangeInput({
       `${d.year}/${d.month.toString().padStart(2, "0")}`;
 
     const startStr = newStart ? format(newStart) : "";
-    const endStr = isPresent ? (value.includes("至今") ? "至今" : "Present") : (newEnd ? format(newEnd) : "");
+    const endStr = isPresent ? presentLabel : (newEnd ? format(newEnd) : "");
 
     if (!startStr && !endStr) {
       onChange("");
@@ -123,25 +136,31 @@ export function UnifiedDateRangeInput({
           </div>
           <span className="text-muted-foreground">-</span>
           <div className="flex-1 relative">
-            <DateInput
-              value={isPresent ? null : range.end}
-              onChange={handleEndChange}
-              variant="bordered"
-              granularity={"month" as any}
-              shouldForceLeadingZeros
-              aria-label="End Date"
-              isDisabled={isPresent}
-              className={cn(isPresent && "opacity-50")}
-              classNames={{
-                inputWrapper:
-                  "bg-background hover:bg-muted/20 h-9 min-h-0 py-0 px-3 shadow-sm ring-1 ring-inset ring-input border-0",
-                innerWrapper: "pb-0",
-              }}
-            />
+            {isPresent ? (
+              <div
+                aria-label="End Date"
+                className="flex h-9 items-center rounded-md bg-background px-3 text-sm text-foreground shadow-sm ring-1 ring-inset ring-input"
+              >
+                {presentLabel}
+              </div>
+            ) : (
+              <DateInput
+                value={range.end}
+                onChange={handleEndChange}
+                variant="bordered"
+                granularity={"month" as any}
+                shouldForceLeadingZeros
+                aria-label="End Date"
+                classNames={{
+                  inputWrapper:
+                    "bg-background hover:bg-muted/20 h-9 min-h-0 py-0 px-3 shadow-sm ring-1 ring-inset ring-input border-0",
+                  innerWrapper: "pb-0",
+                }}
+              />
+            )}
           </div>
         </div>
       </HeroUIProvider>
     </div>
   );
-
 }

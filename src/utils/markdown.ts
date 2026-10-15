@@ -3,6 +3,7 @@ import { DEFAULT_FIELD_ORDER } from "@/config";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
 import { shouldShowFieldLabel } from "@/lib/fieldDisplay";
 import { getProjectLinkMeta } from "@/lib/projectLink";
+import { splitDateRange } from "@/lib/date-range";
 import { BasicFieldType, BasicInfo, CustomItem, MenuSection, ResumeData } from "@/types/resume";
 
 const HTML_TAG_REGEX = /<\/?[a-z][\s\S]*>/i;
@@ -52,12 +53,13 @@ export interface ResumeMarkdownOptions {
 }
 
 const normalizeText = (value?: string) => value?.trim() || "";
-const normalizeDateRangeText = (value?: string) =>
-  normalizeText(value)
-    .split(/\s+-\s*/)
-    .map((part) => part.trim())
-    .filter(Boolean)
-    .join(" - ");
+const normalizeDateRangeText = (value?: string) => {
+  const text = normalizeText(value);
+  if (!text) return "";
+  const range = splitDateRange(text);
+  if (!range) return text;
+  return [range.start, range.end].filter(Boolean).join(" - ");
+};
 
 const createTurndownService = () =>
   new TurndownService({

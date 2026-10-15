@@ -1,5 +1,10 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import {
+  formatPresentLabel,
+  isPresentToken,
+  splitDateRange,
+} from "@/lib/date-range"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -38,9 +43,13 @@ function parseToDate(dateStr: string): Date | null {
 export function formatDateString(dateStr: string | undefined, locale: string = "zh"): string {
   if (!dateStr) return "";
 
-  if (dateStr.includes(DATE_RANGE_SEPARATOR)) {
-    const [start, end] = dateStr.split(DATE_RANGE_SEPARATOR);
-    return formatDateRange(start, end, locale);
+  if (isPresentToken(dateStr)) {
+    return formatPresentLabel(locale);
+  }
+
+  const range = splitDateRange(dateStr);
+  if (range) {
+    return formatDateRange(range.start, range.end, locale);
   }
 
   const date = parseToDate(dateStr);

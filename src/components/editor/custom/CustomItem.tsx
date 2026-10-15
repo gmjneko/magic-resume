@@ -61,7 +61,8 @@ const CustomItemEditor = ({
           value={item.dateRange}
           onChange={(value) => handleChange("dateRange", value)}
           type="date-range"
-          placeholder="例如: 2023.01 - 2024.01"
+          placeholder="例如: 2023.01 - 2024.01 或 2020-至今"
+          showPresentSwitch={true}
         />
 
         <Field

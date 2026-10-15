@@ -16,6 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import RichTextEditor from "../shared/rich-editor/RichEditor";
 import AIPolishDialog from "../shared/ai/AIPolishDialog";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
+import { isPresentToken, splitDateRange } from "@/lib/date-range";
 import { UnifiedDateInput } from "../ui/unified-date-input";
 import { UnifiedDateRangeInput } from "../ui/unified-date-range-input";
 
@@ -74,18 +75,25 @@ const Field = ({
   }, [type, currentDate, fromDate]);
 
   const isPresentValue = useMemo(() => {
-    return value === t("field.toPresent") || value.endsWith(` - ${t("field.toPresent")}`);
-  }, [value, t]);
+    if (isPresentToken(value)) return true;
+    const range = splitDateRange(value);
+    return isPresentToken(range?.end);
+  }, [value]);
 
   const handlePresentToggle = (checked: boolean) => {
+    const presentLabel = t("field.toPresent");
     if (type === "date") {
-      onChange(checked ? t("field.toPresent") : "");
-    } else if (type === "date-range") {
-      const [start] = value.split(" - ");
+      onChange(checked ? presentLabel : "");
+      return;
+    }
+
+    if (type === "date-range") {
+      const range = splitDateRange(value);
+      const start = isPresentToken(value) ? "" : (range?.start ?? value.trim());
       onChange(
         checked
-          ? [start, t("field.toPresent")].filter(Boolean).join(" - ")
-          : start || ""
+          ? [start, presentLabel].filter(Boolean).join(" - ")
+          : start
       );
     }
   };
